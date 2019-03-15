@@ -12,7 +12,88 @@
 </head>
 <body>
 <center>
-<img src='https://i.imgur.com/Sibr9cL.jpg' alt='blast me'>
+  <canvas id="canvas" width="720" height="1136">
+    <img src='https://i.imgur.com/Sibr9cL.jpg' alt='blast me'>
+  </canvas>
+
 </center>
+
+<script>
+function rand(low, high){
+  return low+Math.floor(Math.random()*(high-low));
+}
+var stop = 0;
+var flag = 0;
+function drawAngry(context) {
+  stop = 1;
+  var angry = new Image();
+  angry.onload = function(){
+    drawAngryFace(angry, context, 1000);
+  }
+  angry.src = "http://oi65.tinypic.com/28rmsuh.jpg";
+}
+function drawAngryFace(angry, context, delay) {
+  console.log("anger");
+  var x = rand(-50, 450);
+  var y = rand(-50, 800);
+
+  context.drawImage(angry, x, y);
+
+
+  delay = Math.floor(delay*.9);
+  if(delay < 10){
+    delay = 10;
+  }
+
+  setTimeout(() => {drawAngryFace(angry, context, delay)}, delay);
+}
+
+function drawFace(face, context, delay){
+  console.log("hello" + delay)
+  var canvas = document.getElementById("canvas");
+
+  var x = rand(-50, 450);
+  var y = rand(-50, 800);
+  var degrees = 0;//rand(0, 360);
+
+  //context.save();
+  //context.translate(canvas.width/2,canvas.height/2);
+  //context.rotate(degrees*Math.PI/180);
+  context.drawImage(face, x, y);
+  //context.drawImage(image,-image.width/2,-image.width/2);
+  //context.restore();
+  delay = Math.floor(delay*.9);
+  if(delay < 10){
+    delay = 10;
+    if(flag == 0){
+      setTimeout(() => {drawAngry(context)}, 5000);
+      flag = 1;
+    }
+  }
+
+  if(stop==1) return;
+  setTimeout(() => {drawFace(face, context, delay)}, delay);
+}
+
+window.onload = function() {
+  var c = document.getElementById("canvas");
+  var ctx = c.getContext("2d");
+  var img = new Image();
+  img.onload=function(){
+    ctx.drawImage(img, 0, 0, c.width, c.height);
+  };
+  img.src = "https://i.imgur.com/Sibr9cL.jpg";
+
+
+  var face = new Image();
+  face.onload=function(){
+    drawFace(face, ctx, 2000);
+
+  }
+  face.src = "http://oi63.tinypic.com/2f04ygl.jpg";
+}
+</script>
+
+
 </body>
 </html>
